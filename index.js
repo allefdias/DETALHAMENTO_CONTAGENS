@@ -19,13 +19,20 @@ async function carregarDados() {
         if (Array.isArray(data)) {
             todosRegistros = data;
             popularDropdowns(data);
-            setAtalhoData("este_mes"); // Inicia com os dados deste mês
+            setAtalhoData("este_mes");
         } else {
-            alert("Erro ao ler os dados da planilha.");
+            console.error("Resposta recebida do Apps Script:", data);
+            
+            // Exibe a mensagem de erro detalhada se existir
+            if (data && data.message) {
+                alert("⚠️ Erro retornado pela planilha: " + data.message);
+            } else {
+                alert("⚠️ O script não retornou uma lista válida. Verifique se criou uma 'Nova Implantação' no Apps Script.");
+            }
         }
     } catch (error) {
         console.error("Erro ao buscar dados:", error);
-        alert("Erro ao conectar com a planilha. Verifique a URL do Apps Script.");
+        alert("❌ Erro de conexão com a URL do Apps Script. Verifique se a opção 'Quem tem acesso' está definida como 'Qualquer pessoa'.");
     } finally {
         loading.style.display = "none";
         dashboard.style.display = "block";
