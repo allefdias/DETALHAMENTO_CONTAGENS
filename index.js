@@ -1,5 +1,5 @@
 // COLE AQUI A SUA URL DO GOOGLE APPS SCRIPT
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyV7x7PUB07V2Kym8uiNsV4pHEwx9wGtjnM14XY-EfWGOt36P_q46FzWv_FwWKe9N75/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyDULK8Nj5yFB4dhmtg1nc97j-kdlxvySi-fuvRO3Rmoer48a3EX2SoMqd14910qAjd/exec";
 let todosRegistros = [];
 
 /* ---------------- INITIALIZATION ---------------- */
