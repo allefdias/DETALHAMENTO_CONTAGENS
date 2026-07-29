@@ -11,8 +11,6 @@
 
     <!-- JS -->
     <script src="index.js" defer=""></script>
-    <script type="text/javascript" src="./index.js" defer=""></script>
-    <link rel="stylesheet" href="./index.css">
   </head>
 
   <body>
@@ -135,6 +133,18 @@
 
     </div>
 
+    <!-- POP-UP (MODAL) DE OBSERVAÇÕES -->
+    <div id="modalObs" class="modal-overlay" onclick="fecharModalObs(event)">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>💬 Observação do Plantão</h3>
+          <button class="modal-close" onclick="fecharModalObsDirect()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p id="modalObsTexto"></p>
+        </div>
+      </div>
+    </div>
 
   </body>
 
