@@ -22,8 +22,6 @@ async function carregarDados() {
             setAtalhoData("este_mes");
         } else {
             console.error("Resposta recebida do Apps Script:", data);
-            
-            // Exibe a mensagem de erro detalhada se existir
             if (data && data.message) {
                 alert("⚠️ Erro retornado pela planilha: " + data.message);
             } else {
@@ -102,14 +100,9 @@ function aplicarFiltros() {
     const filtrados = todosRegistros.filter(reg => {
         const regDate = parseDataBR(reg.data);
 
-        // Filtro Data
         if (dtInicio && regDate < dtInicio) return false;
         if (dtFim && regDate > dtFim) return false;
-
-        // Filtro Setor
         if (setorSel && reg.setor !== setorSel) return false;
-
-        // Filtro Funcionario
         if (funcSel && reg.funcionario !== funcSel) return false;
 
         return true;
@@ -126,7 +119,6 @@ function limparFiltros() {
 
 /* ---------------- ATUALIZAR INTERFACE ---------------- */
 function atualizarDashboard(dados) {
-    // 1. Atualizar KPIs
     const totalExames = dados.reduce((acc, r) => acc + (r.qtdExames || 0), 0);
     const funcionariosUnicos = [...new Set(dados.map(r => r.funcionario))].filter(Boolean);
     const setoresUnicos = [...new Set(dados.map(r => r.setor))].filter(Boolean);
@@ -137,13 +129,8 @@ function atualizarDashboard(dados) {
     document.getElementById("kpiTotalSetores").innerText = setoresUnicos.length;
     document.getElementById("kpiTotalFuncionarios").innerText = funcionariosUnicos.length;
 
-    // 2. Renderizar Resumo Mensal
     renderizarResumoMensal(dados);
-
-    // 3. Renderizar Resumo por Setor
     renderizarResumoSetor(dados);
-
-    // 4. Renderizar Tabela Detalhada
     renderizarTabelaDetalhada(dados);
 }
 
@@ -218,15 +205,23 @@ function renderizarTabelaDetalhada(dados) {
       <tbody>
   `;
 
-    // Ordena do mais recente para o mais antigo
     const ordenados = [...dados].sort((a, b) => parseDataBR(b.data) - parseDataBR(a.data));
 
-    ordenados.forEach(r => {
+    ordenados.forEach((r, idx) => {
+        // Verifica se há alguma anotação em observações
+        const obsTexto = r.observacao || r.observacoes || "";
+        const temObs = obsTexto.trim().length > 0;
+
+        // Se houver observação, cria o botão "💬 Obs"
+        const btnObsHtml = temObs 
+            ? `<button class="btn-obs" title="Ver Observação" onclick="abrirModalObs(${idx})">💬 Obs</button>` 
+            : "";
+
         html += `
       <tr>
         <td>${r.data}</td>
         <td>${r.setor}</td>
-        <td>${r.funcionario}</td>
+        <td>${r.funcionario} ${btnObsHtml}</td>
         <td class="text-right"><strong>${r.qtdExames}</strong></td>
       </tr>
     `;
@@ -234,6 +229,29 @@ function renderizarTabelaDetalhada(dados) {
 
     html += `</tbody></table>`;
     container.innerHTML = html;
+
+    // Guarda a lista atual ordenada para ser acessada pelo modal
+    window.dadosAtuaisOrdenados = ordenados;
+}
+
+/* ---------------- FUNÇÕES DO MODAL DE OBSERVAÇÕES ---------------- */
+function abrirModalObs(index) {
+    const registro = window.dadosAtuaisOrdenados[index];
+    if (!registro) return;
+
+    const textoObs = registro.observacao || registro.observacoes || "Sem observações cadastradas.";
+    document.getElementById("modalObsTexto").innerText = textoObs;
+    document.getElementById("modalObs").style.display = "flex";
+}
+
+function fecharModalObsDirect() {
+    document.getElementById("modalObs").style.display = "none";
+}
+
+function fecharModalObs(event) {
+    if (event.target.id === "modalObs") {
+        fecharModalObsDirect();
+    }
 }
 
 /* ---------------- HELPERS DE DATA ---------------- */
