@@ -9,6 +9,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="index.css">
 
+    <!-- Chart.js (Biblioteca de Gráficos) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- JS -->
     <script src="index.js" defer=""></script>
   </head>
@@ -71,6 +74,18 @@
                 <option value="">Todos os Funcionários</option>
               </select>
             </div>
+
+            <!-- Horários Entrada e Saída Lado a Lado -->
+            <div class="campo campo-horarios-lado-a-lado">
+              <div class="subcampo">
+                <label for="filtroEntrada">Horário Entrada:</label>
+                <input type="text" id="filtroEntrada" placeholder="Ex: 08:00">
+              </div>
+              <div class="subcampo">
+                <label for="filtroSaida">Horário Saída:</label>
+                <input type="text" id="filtroSaida" placeholder="Ex: 17:00">
+              </div>
+            </div>
           </div>
 
           <div class="acoes-filtro">
@@ -104,21 +119,39 @@
 
         <!-- RESUMO MENSAL E POR SETOR -->
         <div class="grid-resumos">
+          
           <!-- Resumo Mensal -->
           <section class="card">
-            <h3>📅 Quantitativo por Mês</h3>
-            <div id="tabelaMensalContainer" class="table-responsive">
+            <div class="card-header-flex">
+              <h3>📅 Quantitativo por Mês</h3>
+              <button class="btn-toggle-view" onclick="alternarVisualizacao('Mensal', this)">📊 Ver Gráfico</button>
+            </div>
+            
+            <div id="viewMensalTable" class="table-responsive">
               <p class="sem-dados">Nenhum dado encontrado.</p>
+            </div>
+            
+            <div id="viewMensalChart" class="chart-container" style="display: none;">
+              <canvas id="chartMensal"></canvas>
             </div>
           </section>
 
           <!-- Resumo Por Setor -->
           <section class="card">
-            <h3>🏥 Quantitativo por Setor</h3>
-            <div id="tabelaSetoresContainer" class="table-responsive">
+            <div class="card-header-flex">
+              <h3>🏥 Quantitativo por Setor</h3>
+              <button class="btn-toggle-view" onclick="alternarVisualizacao('Setor', this)">📊 Ver Gráfico</button>
+            </div>
+            
+            <div id="viewSetorTable" class="table-responsive">
               <p class="sem-dados">Nenhum dado encontrado.</p>
             </div>
+            
+            <div id="viewSetorChart" class="chart-container" style="display: none;">
+              <canvas id="chartSetor"></canvas>
+            </div>
           </section>
+          
         </div>
 
         <!-- DETALHAMENTO DE REGISTROS -->
